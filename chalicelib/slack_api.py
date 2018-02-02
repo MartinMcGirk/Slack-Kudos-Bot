@@ -10,6 +10,7 @@ AUTH_TEST = 'auth.test'
 
 BOT_TOKEN = os.environ.get('BOT_TOKEN')
 
+
 def send_message_to_slack(channel, message):
     data = urllib.parse.urlencode(
         (

@@ -1,13 +1,25 @@
-store = {}
+import boto3
+from collections import Counter
+from datetime import datetime
+
+
+
+DYNAMODB = boto3.client('dynamodb')
 
 
 def add_points_to_user(slack_message):
-    user_id = slack_message.recipient
-    points = slack_message.count_emojis_in_message()
-    user_total = store.get(user_id, 0) + points
-    store[user_id] = user_total
-    return user_total
+    now = datetime.now()
+    now.isoformat()
+
+    DYNAMODB.put_item(TableName='emoji_log', Item={
+        'sender': {'S': slack_message.sender},
+        'recipient': {'S': slack_message.recipient},
+        'datetime_given': {'S': str(now)},
+        'channel': {'S': slack_message.channel}
+    })
 
 
 def get_user_points():
-    return store
+    results = DYNAMODB.scan(TableName='emoji_log', ProjectionExpression='recipient')['Items']
+    recipients = [recipient['recipient']['S'] for recipient in results]
+    return Counter(recipients).most_common()

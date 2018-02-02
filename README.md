@@ -16,13 +16,11 @@ To get leaderboard:
  - Configurable emoji token 
  - Can give multiple points at a time
  - Users cannot give themselves points
- - Tallies user scores in memory
- - Can dump the leaderboard out as json
+ - Tallies user scores in DynamoDB
+ - Can return the sorted leaderboard
  
 ### Current limitations
- - Does not yet connect to database
  - Does not yet limit the number of points a person can give per day
- - Leaderboard does not return nicely, or for that matter sorted according to points
  - It will not yet handle the case where someone tries to give points but does not start off their message with the @username
  
 ### Setup
@@ -35,4 +33,4 @@ Note: requires python3.6
     chalice local --port=8080
 
 ### To deploy to AWS
-    chalice deploy
+    chalice deploy --no-autogen-policy

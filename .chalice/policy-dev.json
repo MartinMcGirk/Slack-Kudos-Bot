@@ -9,6 +9,16 @@
         "logs:PutLogEvents"
       ],
       "Resource": "arn:aws:logs:*:*:*"
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "dynamodb:PutItem",
+        "dynamodb:GetItem",
+        "dynamodb:Scan",
+        "dynamodb:Query"
+      ],
+      "Resource": "arn:aws:dynamodb:*:*:table/*"
     }
   ]
 }

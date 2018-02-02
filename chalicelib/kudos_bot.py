@@ -19,21 +19,21 @@ def populate_user_info():
 
 
 def handle_the_giving_of_emojis(slack_message):
-    user_total = add_points_to_user(slack_message)
-    response = user_mappings[slack_message.recipient] + ' now has ' + str(user_total) + ' ' + EMOJI_PLURAL
-
+    add_points_to_user(slack_message)
+    response = f'{user_mappings[slack_message.recipient]} has now been given {slack_message.count_emojis_in_message()} {EMOJI_PLURAL}'
     send_message_to_slack(slack_message.channel, response)
 
 
 def handle_direct_message(slack_message):
     if 'leaderboard' in slack_message.message:
-        local_copy_of_store = get_user_points()
-        user_keys = local_copy_of_store.keys()
-        readable_scores = {}
-        for user in user_keys:
-            readable_scores[user_mappings[user]] = local_copy_of_store[user]
+        user_totals = get_user_points()
 
-        send_message_to_slack(slack_message.channel, str(readable_scores))
+        response = '```\nThe all-time leaderboard is as follows:\n'
+        for user, total in user_totals:
+            response = response + f'\n{user_mappings[user]}: {total}'
+        response = response + '\n```'
+
+        send_message_to_slack(slack_message.channel, response)
 
 
 def deal_with_slack_messages(event):
@@ -42,8 +42,8 @@ def deal_with_slack_messages(event):
         populate_user_info()
         if slack_message.recipient == this_bot['user_id']:
             handle_direct_message(slack_message)
-        elif slack_message.recipient == slack_message.sender:
-            send_message_to_slack(slack_message.channel, "Nice try, but you can't give yourself " + EMOJI_PLURAL)
+        elif slack_message.recipient == slack_message.sender and slack_message.count_emojis_in_message():
+            send_message_to_slack(slack_message.channel, f"Nice try, but you can't give yourself {EMOJI_PLURAL}")
         elif slack_message.count_emojis_in_message():
             handle_the_giving_of_emojis(slack_message)
 

@@ -15,6 +15,7 @@ To get leaderboard:
 ### Current functionality:
  - Configurable emoji token 
  - Can give multiple points at a time
+ - Users cannot give themselves points
  - Tallies user scores in memory
  - Can dump the leaderboard out as json
  
@@ -23,7 +24,6 @@ To get leaderboard:
  - Does not yet limit the number of points a person can give per day
  - Leaderboard does not return nicely, or for that matter sorted according to points
  - It will not yet handle the case where someone tries to give points but does not start off their message with the @username
- - User can currently give themselves emojis
  
 ### Setup
 Note: requires python3.6

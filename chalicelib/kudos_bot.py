@@ -42,6 +42,8 @@ def deal_with_slack_messages(event):
         populate_user_info()
         if slack_message.recipient == this_bot['user_id']:
             handle_direct_message(slack_message)
+        elif slack_message.recipient == slack_message.sender:
+            send_message_to_slack(slack_message.channel, "Nice try, but you can't give yourself " + EMOJI_PLURAL)
         elif slack_message.count_emojis_in_message():
             handle_the_giving_of_emojis(slack_message)
 

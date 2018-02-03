@@ -27,16 +27,25 @@ To get the leaderboard:
  
 ### Current limitations
  - Users can currently give kudos to only one user at a time
- - Cannot be deployed with cloudformation
  
 ### Setup
-Note: requires python3.6
+First, create the "emoji_log" DynamoDB table in AWS using Cloudformation 
+
+    aws cloudformation create-stack --stack-name emoji-log \ 
+    --template-body file://cloudformation.yaml
+
+
+Then build the package with dependencies. __Note: requires python3.6__
 
     pip install -r requirements.txt
-    export BOT_TOKEN=<Bot User OAuth Access Token>
-    
-### To run locally
-    chalice local --port=8080
 
 ### To deploy to AWS
+First fill in the BOT_TOKEN environment variable in `.chalice/config.json`, then
+
     chalice deploy --no-autogen-policy
+
+### To run locally
+Requires DynamoDB installed locally
+
+    export BOT_TOKEN=<Bot User OAuth Access Token>
+    chalice local --port=8080

@@ -3,7 +3,10 @@
   "app_name": "kudosbot",
   "stages": {
     "dev": {
-      "api_gateway_stage": "api"
+      "api_gateway_stage": "api",
+      "environment_variables": {
+        "BOT_TOKEN": "<PUT_YOUR_BOT_TOKEN_HERE>"
+      }
     }
   }
 }

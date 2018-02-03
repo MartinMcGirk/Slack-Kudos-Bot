@@ -1,0 +1,25 @@
+---
+AWSTemplateFormatVersion: '2010-09-09'
+Resources:
+  EmojiLogTable:
+    Properties:
+      AttributeDefinitions:
+      - AttributeName: sender
+        AttributeType: S
+      - AttributeName: datetime_given
+        AttributeType: S
+      KeySchema:
+      - AttributeName: sender
+        KeyType: HASH
+      - AttributeName: datetime_given
+        KeyType: RANGE
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
+      TableName: "emoji_log"
+    Type: AWS::DynamoDB::Table
+Outputs:
+  EmojiLogTable:
+    Description: DynamoDB table indexing emoji logs.
+    Value:
+      Ref: EmojiLogTable

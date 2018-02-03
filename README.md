@@ -16,6 +16,7 @@ To get leaderboard:
  - Configurable emoji token 
  - Can give multiple points at a time
  - Users cannot give themselves points
+ - Users can only give a set number of points a day
  - Tallies user scores in DynamoDB
  - Can return the sorted leaderboard
  

@@ -19,8 +19,8 @@ def populate_user_info():
 
 
 def handle_the_giving_of_emojis(slack_message):
-    add_points_to_user(slack_message)
-    response = f'{user_mappings[slack_message.recipient]} has now been given {slack_message.count_emojis_in_message()} {EMOJI_PLURAL}'
+    points_given, points_remaining = add_points_to_user(slack_message)
+    response = f'{user_mappings[slack_message.recipient]} has now been given {points_given} {EMOJI_PLURAL}. You have {points_remaining} {EMOJI_PLURAL} left today.'
     send_message_to_slack(slack_message.channel, response)
 
 

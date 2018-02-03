@@ -2,6 +2,7 @@ import boto3
 from collections import Counter
 from datetime import datetime, timedelta
 
+import logging
 from boto3.dynamodb.conditions import Key
 
 
@@ -10,10 +11,8 @@ dynresource = boto3.resource('dynamodb')
 table = dynresource.Table('emoji_log')
 
 
-def add_points_to_user(slack_message, points_override=None):
-    points_to_give = points_override or slack_message.count_emojis_in_message()
-
-    for _ in range(points_to_give):
+def add_points_to_user(slack_message, points):
+    for _ in range(points):
         now = datetime.now()
         now.isoformat()
         DYNAMODB.put_item(TableName='emoji_log', Item={

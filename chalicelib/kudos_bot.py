@@ -34,13 +34,17 @@ def work_out_points_to_give_and_points_remaining(slack_message):
 
 def handle_the_giving_of_emojis(slack_message):
     points_to_give, points_remaining = work_out_points_to_give_and_points_remaining(slack_message)
-    add_points_to_user(slack_message, points_to_give)
 
-    sender_message = f'{user_mappings[slack_message.recipient]} has now been given {points_to_give} {EMOJI_PLURAL}. You have {points_remaining} {EMOJI_PLURAL} left today.'
-    send_message_to_slack(slack_message.sender, sender_message)
+    if points_to_give == 0:
+        sender_message = f'Sorry, no can do! You have you used all your {EMOJI_PLURAL} today already.'
+        send_message_to_slack(slack_message.sender, sender_message)
+    else:
+        add_points_to_user(slack_message, points_to_give)
+        sender_message = f'{user_mappings[slack_message.recipient]} has now been given {points_to_give} {EMOJI_PLURAL}. You have {points_remaining} {EMOJI_PLURAL} left today.'
+        send_message_to_slack(slack_message.sender, sender_message)
 
-    recipient_message = f'Woohoo! {user_mappings[slack_message.sender]} has given you {points_to_give} {EMOJI_PLURAL}'
-    send_message_to_slack(slack_message.recipient, recipient_message)
+        recipient_message = f'Woohoo! {user_mappings[slack_message.sender]} has given you {points_to_give} {EMOJI_PLURAL}'
+        send_message_to_slack(slack_message.recipient, recipient_message)
 
 
 def handle_direct_message(slack_message):

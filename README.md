@@ -8,9 +8,9 @@ To give kudos:
 
     @<person> <emoji>
     or
-    <emoji> <@person>
+    <emoji> @<person>
     or
-    Some <emoji> <emoji> are due to <@person> for being awesome
+    Some <emoji> <emoji> are due to @<person> for being awesome
     
 To get the leaderboard:
 
@@ -28,7 +28,6 @@ To get the leaderboard:
 ### Current limitations
  - Users can currently give kudos to only one user at a time
  - Cannot be deployed with cloudformation
- - No help command
  
 ### Setup
 Note: requires python3.6

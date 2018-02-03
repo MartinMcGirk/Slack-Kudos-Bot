@@ -1,3 +1,4 @@
 EMOJI = ":taco:"
 EMOJI_PLURAL = 'tacos'
 MAX_POINTS_PER_USER_PER_DAY = 5
+BOT_NAME = 'HeyHaggis'

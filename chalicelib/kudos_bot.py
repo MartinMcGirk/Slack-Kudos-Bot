@@ -1,6 +1,6 @@
 import logging
 
-from chalicelib.global_constants import EMOJI_PLURAL, MAX_POINTS_PER_USER_PER_DAY
+from chalicelib.global_constants import EMOJI_PLURAL, MAX_POINTS_PER_USER_PER_DAY, BOT_NAME
 from chalicelib.persistence_adapter import add_points_to_user, get_user_points, get_number_of_points_given_so_far_today
 from chalicelib.slack_api import send_message_to_slack, get_from_slack, GET_USERS, AUTH_TEST
 from chalicelib.slack_message_builder import parse_message
@@ -52,6 +52,13 @@ def handle_direct_message(slack_message):
             response = response + f'\n{user_mappings[user]}: {total}'
         response = response + '\n```'
 
+        send_message_to_slack(slack_message.channel, response)
+    elif 'help' in slack_message.message:
+        response = 'To give kudos:\n```\n@<person> <emoji>\nor\nSome <emoji> <emoji> are due to @<person> for being awesome\n```\n'
+        response = response + f'To get the leaderboard:\n```\n@{BOT_NAME} leaderboard\n```'
+        send_message_to_slack(slack_message.channel, response)
+    else:
+        response = f"I didn't understand that command. To see the commands available, type: `@{BOT_NAME} help`"
         send_message_to_slack(slack_message.channel, response)
 
 

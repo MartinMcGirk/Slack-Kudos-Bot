@@ -1,7 +1,7 @@
 import logging
 
-from chalicelib.global_constants import EMOJI_PLURAL
-from chalicelib.persistence_adapter import add_points_to_user, get_user_points
+from chalicelib.global_constants import EMOJI_PLURAL, MAX_POINTS_PER_USER_PER_DAY
+from chalicelib.persistence_adapter import add_points_to_user, get_user_points, get_number_of_points_given_so_far_today
 from chalicelib.slack_api import send_message_to_slack, get_from_slack, GET_USERS, AUTH_TEST
 from chalicelib.slack_message_builder import parse_message
 
@@ -18,10 +18,29 @@ def populate_user_info():
             user_mappings[user['id']] = user['profile']['display_name'] or user['profile']['real_name']
 
 
+def work_out_points_to_give_and_points_remaining(slack_message):
+    so_far_today = get_number_of_points_given_so_far_today(slack_message.sender)
+    left_today = max(MAX_POINTS_PER_USER_PER_DAY - so_far_today, 0)
+
+    if slack_message.count_emojis_in_message() <= left_today:
+        points_to_give = slack_message.count_emojis_in_message()
+    else:
+        points_to_give = left_today
+
+    points_remaining = left_today - points_to_give
+
+    return points_to_give, points_remaining
+
+
 def handle_the_giving_of_emojis(slack_message):
-    points_given, points_remaining = add_points_to_user(slack_message)
-    response = f'{user_mappings[slack_message.recipient]} has now been given {points_given} {EMOJI_PLURAL}. You have {points_remaining} {EMOJI_PLURAL} left today.'
-    send_message_to_slack(slack_message.channel, response)
+    points_to_give, points_remaining = work_out_points_to_give_and_points_remaining(slack_message)
+    add_points_to_user(slack_message, points_to_give)
+
+    sender_message = f'{user_mappings[slack_message.recipient]} has now been given {points_to_give} {EMOJI_PLURAL}. You have {points_remaining} {EMOJI_PLURAL} left today.'
+    send_message_to_slack(slack_message.sender, sender_message)
+
+    recipient_message = f'Woohoo! {user_mappings[slack_message.sender]} has given you {points_to_give} {EMOJI_PLURAL}'
+    send_message_to_slack(slack_message.recipient, recipient_message)
 
 
 def handle_direct_message(slack_message):

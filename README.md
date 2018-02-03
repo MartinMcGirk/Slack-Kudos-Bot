@@ -17,11 +17,11 @@ To get leaderboard:
  - Can give multiple points at a time
  - Users cannot give themselves points
  - Users can only give a set number of points a day
+ - The sender and the recipient both get notifications of the kudos delivery
  - Tallies user scores in DynamoDB
  - Can return the sorted leaderboard
  
 ### Current limitations
- - Does not yet limit the number of points a person can give per day
  - It will not yet handle the case where someone tries to give points but does not start off their message with the @username
  
 ### Setup

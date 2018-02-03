@@ -35,5 +35,18 @@ class SlackMessageBuilderTestCase(TestCase):
         parsed_message = parse_message(mockEvent)
         self.assertEquals('User1', parsed_message.sender)
         self.assertEquals('User2', parsed_message.recipient)
-        self.assertEquals('This is a message', parsed_message.message)
+        self.assertEquals('<@User2> This is a message', parsed_message.message)
+        self.assertEquals('#general', parsed_message.channel)
+
+    def test_can_parse_message_correctly_with_a_recipientat_the_end(self):
+        mockEvent = {
+            'type': 'message',
+            'user': 'User1',
+            'text': 'This is a message for <@User2>',
+            'channel': '#general'
+        }
+        parsed_message = parse_message(mockEvent)
+        self.assertEquals('User1', parsed_message.sender)
+        self.assertEquals('User2', parsed_message.recipient)
+        self.assertEquals('This is a message for <@User2>', parsed_message.message)
         self.assertEquals('#general', parsed_message.channel)

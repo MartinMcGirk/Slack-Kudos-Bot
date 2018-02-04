@@ -38,7 +38,7 @@ def handle_the_giving_of_emojis(slack_message):
         points_to_give, points_remaining = work_out_points_to_give_and_points_remaining(slack_message)
 
         if points_to_give == 0:
-            sender_message = f"Sorry, you can't give {recipient} {EMOJI_PLURAL} because you have you used all your {EMOJI_PLURAL} today already."
+            sender_message = f"Sorry, you can't give {user_mappings[recipient]} {EMOJI_PLURAL} because you have you used all your {EMOJI_PLURAL} today already."
             send_message_to_slack(slack_message.sender, sender_message)
         else:
             add_points_to_user(slack_message, recipient, points_to_give)

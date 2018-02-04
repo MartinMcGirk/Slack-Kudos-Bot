@@ -7,6 +7,7 @@ SLACK_ROOT = "https://slack.com/api/"
 POST_MESSAGE = "chat.postMessage"
 GET_USERS = 'users.list'
 AUTH_TEST = 'auth.test'
+IM_LIST = 'im.list'
 
 BOT_TOKEN = os.environ.get('BOT_TOKEN')
 

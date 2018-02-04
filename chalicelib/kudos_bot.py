@@ -2,10 +2,11 @@ import logging
 
 from chalicelib.global_constants import EMOJI_PLURAL, MAX_POINTS_PER_USER_PER_DAY, BOT_NAME, EMOJI
 from chalicelib.persistence_adapter import add_points_to_user, get_user_points, get_number_of_points_given_so_far_today
-from chalicelib.slack_api import send_message_to_slack, get_from_slack, GET_USERS, AUTH_TEST
+from chalicelib.slack_api import send_message_to_slack, get_from_slack, GET_USERS, AUTH_TEST, IM_LIST
 from chalicelib.slack_message_builder import parse_message
 
 user_mappings = {}
+im_list = {}
 this_bot = {}
 
 
@@ -16,6 +17,10 @@ def populate_user_info():
         user_info_response = get_from_slack(GET_USERS)
         for user in user_info_response['members']:
             user_mappings[user['id']] = user['profile']['display_name'] or user['profile']['real_name']
+    if not im_list:
+        im_list_response = get_from_slack(IM_LIST)
+        for im in im_list_response['ims']:
+            im_list[im['user']] = im['id']
 
 
 def work_out_points_to_give_and_points_remaining(slack_message):
@@ -43,10 +48,10 @@ def handle_the_giving_of_emojis(slack_message):
         else:
             add_points_to_user(slack_message, recipient, points_to_give)
             sender_message = f'{user_mappings[recipient]} has now been given {points_to_give} {EMOJI_PLURAL}. You have {points_remaining} {EMOJI_PLURAL} left today.'
-            send_message_to_slack(slack_message.sender, sender_message)
+            send_message_to_slack(im_list[slack_message.sender], sender_message)
 
             recipient_message = f'Woohoo! {user_mappings[slack_message.sender]} has given you {points_to_give} {EMOJI_PLURAL}'
-            send_message_to_slack(recipient, recipient_message)
+            send_message_to_slack(im_list[recipient], recipient_message)
 
 
 def handle_direct_message(slack_message):

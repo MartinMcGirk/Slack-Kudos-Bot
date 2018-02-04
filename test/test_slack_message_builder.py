@@ -21,7 +21,7 @@ class SlackMessageBuilderTestCase(TestCase):
         }
         parsed_message = parse_message(mockEvent)
         self.assertEquals('User1', parsed_message.sender)
-        self.assertIsNone(parsed_message.recipient)
+        self.assertIsNone(parsed_message.recipients)
         self.assertEquals('This is a message', parsed_message.message)
         self.assertEquals('#general', parsed_message.channel)
 
@@ -34,7 +34,7 @@ class SlackMessageBuilderTestCase(TestCase):
         }
         parsed_message = parse_message(mockEvent)
         self.assertEquals('User1', parsed_message.sender)
-        self.assertEquals('User2', parsed_message.recipient)
+        self.assertEquals(['User2'], parsed_message.recipients)
         self.assertEquals('<@User2> This is a message', parsed_message.message)
         self.assertEquals('#general', parsed_message.channel)
 
@@ -47,6 +47,17 @@ class SlackMessageBuilderTestCase(TestCase):
         }
         parsed_message = parse_message(mockEvent)
         self.assertEquals('User1', parsed_message.sender)
-        self.assertEquals('User2', parsed_message.recipient)
+        self.assertEquals(['User2'], parsed_message.recipients)
         self.assertEquals('This is a message for <@User2>', parsed_message.message)
         self.assertEquals('#general', parsed_message.channel)
+
+    def test_can_parse_multiple_recipients(self):
+        mockEvent = {
+            'type': 'message',
+            'user': 'User1',
+            'text': 'This is a message for <@User2> and <@User3>',
+            'channel': '#general'
+        }
+        parsed_message = parse_message(mockEvent)
+        self.assertEquals(2, len(parsed_message.recipients))
+        self.assertEquals(['User2', 'User3'], parsed_message.recipients)

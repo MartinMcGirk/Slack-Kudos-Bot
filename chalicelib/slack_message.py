@@ -2,9 +2,9 @@ from chalicelib.global_constants import EMOJI
 
 
 class SlackMessage:
-    def __init__(self, sender, recipient, message, channel):
+    def __init__(self, sender, recipients, message, channel):
         self.sender = sender
-        self.recipient = recipient
+        self.recipients = recipients
         self.message = message
         self.channel = channel
 

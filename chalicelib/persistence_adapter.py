@@ -11,13 +11,13 @@ dynresource = boto3.resource('dynamodb')
 table = dynresource.Table('emoji_log')
 
 
-def add_points_to_user(slack_message, points):
+def add_points_to_user(slack_message, recipient, points):
     for _ in range(points):
         now = datetime.now()
         now.isoformat()
         DYNAMODB.put_item(TableName='emoji_log', Item={
             'sender': {'S': slack_message.sender},
-            'recipient': {'S': slack_message.recipient},
+            'recipient': {'S': recipient},
             'datetime_given': {'S': str(now)},
             'channel': {'S': slack_message.channel}
         })

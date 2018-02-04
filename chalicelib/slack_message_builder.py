@@ -14,9 +14,10 @@ def parse_message(event):
 
 
 def _extract_recipient_from_message(message_text):
-    matches = re.search(MENTION_REGEX, message_text)
-    if matches:
-        # the first group contains the username, the second group contains the remaining message
-        return (matches.group(1)) if matches else (None)
-    else:
-        return None
+    matches = re.findall(MENTION_REGEX, message_text)
+    return matches if matches else None
+    # if matches:
+    #     # the first group contains the username, the second group contains the remaining message
+    #     return (matches.group(1)) if matches else (None)
+    # else:
+    #     return None

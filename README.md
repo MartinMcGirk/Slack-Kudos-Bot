@@ -19,14 +19,12 @@ To get the leaderboard:
 ### Current functionality:
  - Configurable emoji token 
  - Can give multiple points at a time
+ - Can give multiple users a point at once
  - Users cannot give themselves points
  - Users can only give a set number of points per day
  - The sender and the recipient both get notifications of the points delivery
  - Records point giving events in DynamoDB
  - Can return the sorted leaderboard
- 
-### Current limitations
- - Users can currently give kudos to only one user at a time
  
 ### Setup
 First, create the "emoji_log" DynamoDB table in AWS using Cloudformation 

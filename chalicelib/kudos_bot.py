@@ -1,6 +1,6 @@
 import logging
 
-from chalicelib.global_constants import EMOJI_PLURAL, MAX_POINTS_PER_USER_PER_DAY, BOT_NAME
+from chalicelib.global_constants import EMOJI_PLURAL, MAX_POINTS_PER_USER_PER_DAY, BOT_NAME, EMOJI
 from chalicelib.persistence_adapter import add_points_to_user, get_user_points, get_number_of_points_given_so_far_today
 from chalicelib.slack_api import send_message_to_slack, get_from_slack, GET_USERS, AUTH_TEST
 from chalicelib.slack_message_builder import parse_message
@@ -33,22 +33,27 @@ def work_out_points_to_give_and_points_remaining(slack_message):
 
 
 def handle_the_giving_of_emojis(slack_message):
-    points_to_give, points_remaining = work_out_points_to_give_and_points_remaining(slack_message)
 
-    if points_to_give == 0:
-        sender_message = f'Sorry, no can do! You have you used all your {EMOJI_PLURAL} today already.'
-        send_message_to_slack(slack_message.sender, sender_message)
-    else:
-        add_points_to_user(slack_message, points_to_give)
-        sender_message = f'{user_mappings[slack_message.recipient]} has now been given {points_to_give} {EMOJI_PLURAL}. You have {points_remaining} {EMOJI_PLURAL} left today.'
-        send_message_to_slack(slack_message.sender, sender_message)
+    for recipient in slack_message.recipients:
+        points_to_give, points_remaining = work_out_points_to_give_and_points_remaining(slack_message)
 
-        recipient_message = f'Woohoo! {user_mappings[slack_message.sender]} has given you {points_to_give} {EMOJI_PLURAL}'
-        send_message_to_slack(slack_message.recipient, recipient_message)
+        if points_to_give == 0:
+            sender_message = f"Sorry, you can't give {recipient} {EMOJI_PLURAL} because you have you used all your {EMOJI_PLURAL} today already."
+            send_message_to_slack(slack_message.sender, sender_message)
+        else:
+            add_points_to_user(slack_message, recipient, points_to_give)
+            sender_message = f'{user_mappings[recipient]} has now been given {points_to_give} {EMOJI_PLURAL}. You have {points_remaining} {EMOJI_PLURAL} left today.'
+            send_message_to_slack(slack_message.sender, sender_message)
+
+            recipient_message = f'Woohoo! {user_mappings[slack_message.sender]} has given you {points_to_give} {EMOJI_PLURAL}'
+            send_message_to_slack(recipient, recipient_message)
 
 
 def handle_direct_message(slack_message):
-    if 'leaderboard' in slack_message.message:
+    if EMOJI in slack_message.message:
+        response = f"Don't give the {EMOJI} bot {EMOJI_PLURAL}; have some self respect! "
+        send_message_to_slack(slack_message.channel, response)
+    elif 'leaderboard' in slack_message.message:
         user_totals = get_user_points()
 
         response = '```\nThe all-time leaderboard is as follows:\n'
@@ -68,11 +73,11 @@ def handle_direct_message(slack_message):
 
 def deal_with_slack_messages(event):
     slack_message = parse_message(event)
-    if slack_message and slack_message.recipient:
+    if slack_message and slack_message.recipients:
         populate_user_info()
-        if slack_message.recipient == this_bot['user_id']:
+        if this_bot['user_id'] in slack_message.recipients:
             handle_direct_message(slack_message)
-        elif slack_message.recipient == slack_message.sender and slack_message.count_emojis_in_message():
+        elif slack_message.sender in slack_message.recipients and slack_message.count_emojis_in_message():
             send_message_to_slack(slack_message.channel, f"Nice try, but you can't give yourself {EMOJI_PLURAL}")
         elif slack_message.count_emojis_in_message():
             handle_the_giving_of_emojis(slack_message)

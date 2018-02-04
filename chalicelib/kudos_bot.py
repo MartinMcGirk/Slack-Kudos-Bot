@@ -63,7 +63,7 @@ def handle_direct_message(slack_message):
 
         send_message_to_slack(slack_message.channel, response)
     elif 'help' in slack_message.message:
-        response = 'To give kudos:\n```\n@<person> <emoji>\nor\nSome <emoji> <emoji> are due to @<person> for being awesome\n```\n'
+        response = f'To give {EMOJI_PLURAL}:\n```\n@<person> <emoji>\nor\nSome <emoji> <emoji> are due to @<person> for being awesome\n```\n'
         response = response + f'To get the leaderboard:\n```\n@{BOT_NAME} leaderboard\n```'
         send_message_to_slack(slack_message.channel, response)
     else:

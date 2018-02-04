@@ -5,7 +5,11 @@
     "dev": {
       "api_gateway_stage": "api",
       "environment_variables": {
-        "BOT_TOKEN": "<PUT_YOUR_BOT_TOKEN_HERE>"
+        "BOT_TOKEN": "<PUT_YOUR_BOT_TOKEN_HERE>",
+        "EMOJI": ":taco:",
+        "EMOJI_PLURAL": "tacos",
+        "MAX_POINTS_PER_USER_PER_DAY": "5",
+        "BOT_NAME": "KudosBot"
       }
     }
   }

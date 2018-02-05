@@ -54,7 +54,9 @@ First fill in the `BOT_TOKEN` and `VERIFICATION_TOKEN` environment variables in 
 - The number of points per user per day that someone is allowed to give out.
 - `BOT_NAME`: This should equal the bot user name for your slack app
 
-    chalice deploy --no-autogen-policy
+```
+chalice deploy --no-autogen-policy
+```
 
 ### To run locally
 Requires DynamoDB installed locally

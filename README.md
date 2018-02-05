@@ -51,7 +51,7 @@ First fill in the `BOT_TOKEN` and `VERIFICATION_TOKEN` environment variables in 
 
 - `EMOJI`: The emoji or string that users can use to gift points to each other
 - `EMOJI_PLURAL`: The word that represents several `EMOJI`. So if you are gifting taco emojis then this should be `"tacos"`. Used for writing messsages like "You have been given 4 tacos"
-- The number of points per user per day that someone is allowed to give out.
+- `MAX_POINTS_PER_USER_PER_DAY`: The number of points per user per day that someone is allowed to give out.
 - `BOT_NAME`: This should equal the bot user name for your slack app
 
 ```

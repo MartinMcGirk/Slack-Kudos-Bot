@@ -3,5 +3,7 @@ bin/
 local/
 lib/
 include/
+.virtualenv/
+.chalice/
 
 *.pyc
